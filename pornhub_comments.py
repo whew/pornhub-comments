@@ -215,9 +215,9 @@ if __name__ == '__main__':
     for url in args.urls:
         result = get_comments(url, get_users=not args.skip_users, session=session)
 
-        info = {'video_id': result['video']['video_id'],
-                'id':       result['video']['numeric_id'],
-                'title':    result['video']['title']}
+        info = {'video_id':   result['video']['video_id'],
+                'numeric_id': result['video']['numeric_id'],
+                'title':      result['video']['title']}
         fn = _sanitize(args.output.format(**info))
         directory = os.path.split(fn)[0]
         if directory:
