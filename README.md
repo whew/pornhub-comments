@@ -41,9 +41,10 @@ Output is JSON and looks like this:
 
 ### Usage within Python
 ```
+import requests
 import pornhub_comments
 
-session = requests.session()
+session = requests.session() # optional
 comments = pornhub_comments.get_comments('https://www.pornhub.com/view_video.php?viewkey=ph5d797f173d256', session=session)
 ```
 
