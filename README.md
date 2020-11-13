@@ -22,7 +22,7 @@ Get comments from Pornhub videos
 * `title`, e.g. `素人,えんじょ,JK,フェラ,手コキ,射精,制服`
 
 #### Example usage
-* `python3 pornmhub_comments.py https://www.pornhub.com/view_video.php?viewkey=ph5d797f173d256`
+* `python3 pornhub_comments.py https://www.pornhub.com/view_video.php?viewkey=ph5d797f173d256`
 * `python3 pornhub_comments.py ph5d797f173d256`
 
 ### Output
