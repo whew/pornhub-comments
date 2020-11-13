@@ -14,7 +14,7 @@ Get comments from Pornhub videos
 * `-h`, `--help` Help
 * `-c`, `--skip-users` Don't download information about commenters. This is significantly faster for videos with lots of comments.
 * `-x`, `--proxy` URL of the proxy server to use
-* `-o`, `--output` Output filename template, default `'{video_slug}.json'`
+* `-o`, `--output` Output filename template, default `'{title}-{video_id}.json'`
 
 #### Output template keys
 * `video_id`, e.g. `ph5d797f173d256`
