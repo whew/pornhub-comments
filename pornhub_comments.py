@@ -11,10 +11,10 @@ try:
 except ImportError:
     js2py = None
 
-_RE_VALID_URL = re.compile(r'(?:https?://(?:www.)?pornhub.com/view_video?viewkey=)?([\w\d]+)')
+_RE_VALID_URL = re.compile(r'(?:(?:https?://(?:www\.)?)?pornhub\.com/view_video\.php\?viewkey=)?([\w\d]+)')
 
 _URL_BASE     = 'https://www.pornhub.com'
-_URL_VIDEO    = 'https://www.pornhub.com/view_video.php'
+_URL_VIDEO    = 'https://www.pornhub.com/view_video.php?viewkey={}'
 _URL_COMMENTS = 'https://www.pornhub.com/comment/show'
 
 def _request_pornhub(method, url, kwargs=None, is_json=False, session=None):
@@ -26,7 +26,10 @@ def _request_pornhub(method, url, kwargs=None, is_json=False, session=None):
     response.raise_for_status()
 
     if is_json or 'application/json' in response.headers['Content-Type']:
-        return response.json()
+        try:
+            return response.json()
+        except json.JSONDecodeError:
+            pass
 
     soup = bs4.BeautifulSoup(response.text, 'html5lib')
     body = soup.find('body')
@@ -34,6 +37,7 @@ def _request_pornhub(method, url, kwargs=None, is_json=False, session=None):
     onload = body and body.get('onload')
     # no javascript wall
     if onload == None:
+        assert not is_json, 'expected JSON response, got HTML response'
         return soup
 
     assert js2py, f'Pornhub blocked our request for {url}, install Js2Py (https://pypi.org/project/Js2Py/) to circumvent'
@@ -58,10 +62,14 @@ def _request_pornhub(method, url, kwargs=None, is_json=False, session=None):
     response.raise_for_status()
 
     if is_json or 'application/json' in response.headers['Content-Type']:
-        return response.json()
+        try:
+            return response.json()
+        except json.JSONDecodeError:
+            pass
 
     soup = bs4.BeautifulSoup(response.text, 'html5lib')
     assert 'onload' not in soup.find('body').attrs, "failed to circumvent Pornhub's Javascript wall"
+    assert not is_json, 'expected JSON response, got HTML response'
 
     return soup
 
@@ -118,7 +126,7 @@ def _parse_comment_html(comment_html):
 
     user_wrap, comment_message, _ = comment_html.find().find_all(recursive=False)
     username_wrap = user_wrap.find('div', {'class': 'usernameWrap'})
-    username_badges_wrapper = user_wrap.find('span', {'class': 'usernameBadgesWrapper'})
+    username_span = user_wrap.find('span', {'class': 'usernameBadgesWrapper'}) or user_wrap.find('span', {'class': 'usernameLink'})
     date = user_wrap.find('div', {'class': 'date'})
     comment_message_span = comment_message.find('span')
     vote_total = comment_message.find('span', {'class': 'voteTotal'})
