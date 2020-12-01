@@ -135,7 +135,7 @@ def _parse_comment_html(comment_html):
 
     comment['user_id'] = int(username_wrap['data-userid'])
     comment['user_json_url'] = urllib.parse.urljoin(_URL_BASE, username_wrap['data-json-url'])
-    comment['user_name'] = username_badges_wrapper.text
+    comment['user_name'] = username_span.text
     comment['user_profile'] = user_profile and urllib.parse.urljoin(_URL_BASE, user_profile['href'])
     comment['date'] = date.get_text(strip=True)
     comment['body'] = re.fullmatch(r'<span>(.*)</span>', str(comment_message_span), flags=re.DOTALL).group(1)
